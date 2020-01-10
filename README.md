@@ -17,3 +17,6 @@ cd docker && docker-compose up -d --build
 ```bash
 vendor/bin/phpunit -c phpunit.xml
 ```
+
+## Result
+![Image description](https://i.ibb.co/4s9DXMT/Screenshot-2020-01-10-at-17-39-07.png)
