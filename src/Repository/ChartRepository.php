@@ -43,7 +43,7 @@ class ChartRepository implements ChartRepositoryInterface
             $week = $date->format("W");
 
             if (!array_key_exists($week, $groupedData)) {
-                $groupedData[$week]['count'] = 0;
+                $groupedData[$week] = ['count' => 0];
             }
             if (!array_key_exists($percentage, $groupedData[$week])) {
                 $groupedData[$week][$percentage] = 0;
