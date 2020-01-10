@@ -3,11 +3,11 @@ Temper Assessment
 
 ## Installation
 ```bash
-php -S localhost:8080
+cd public/ && php -S localhost:8080
 ```
 OR
 ```bash
-cd docker && docker-compose up -d --build
+cd docker/ && docker-compose up -d --build
 ```
 
 ##### You can visit http://localhost:8080
