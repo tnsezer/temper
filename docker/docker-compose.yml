@@ -1,0 +1,10 @@
+version: '2'
+services:
+  php:
+    extends:
+      file: php7/base.yml
+      service: php
+  web:
+    extends:
+      file: nginx/base.yml
+      service: web
