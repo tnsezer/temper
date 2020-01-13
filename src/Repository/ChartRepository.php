@@ -39,18 +39,16 @@ class ChartRepository implements ChartRepositoryInterface
                 throw new \InvalidArgumentException();
             }
 
-            $percentage = $this->percentage->findPercentageInSteps((int) $record['onboarding_perentage']);
+            $percentage = (int)$record['onboarding_perentage'];
+            $step = $this->percentage->findStepInFlow($percentage);
             $week = $date->format("W");
 
             if (!array_key_exists($week, $groupedData)) {
-                $groupedData[$week] = ['count' => 0];
+                $groupedData[$week] = array_fill(0, count(Percentage::STEPS), 0);
             }
-            if (!array_key_exists($percentage, $groupedData[$week])) {
-                $groupedData[$week][$percentage] = 0;
+            for ($i=0; $i <= $step; $i++) {
+                $groupedData[$week][$i]++;
             }
-
-            $groupedData[$week][$percentage]++;
-            $groupedData[$week]['count']++;
         }
 
         return $groupedData;

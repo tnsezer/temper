@@ -1,7 +1,7 @@
-var app = new Vue({
+new Vue({
     el: '#chart',
     data: {
-        chart: {},
+        error: '',
     },
     methods: {
         init: function () {
@@ -17,10 +17,11 @@ var app = new Vue({
                         series: response.data.series
                     };
 
-                    this.chart = Highcharts.chart('chartContainer', chart);
+                    Highcharts.chart('chartContainer', chart);
                 }.bind(this))
                 .catch(function (error) {
                     console.log(error);
+                    this.error = error;
                 }.bind(this));
         }
     },

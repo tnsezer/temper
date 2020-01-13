@@ -19,26 +19,29 @@ class Percentage
      * @param int $userPercentage
      * @return int
      */
-    public function findPercentageInSteps(int $userPercentage): int
+    public function findStepInFlow(int $userPercentage): int
     {
-        $realPercentage = 0;
+        $currentStep = -1;
         foreach (self::STEPS as $percentage => $step) {
             if ($userPercentage < $percentage) {
                 break;
             }
-
-            $realPercentage = $percentage;
+            $currentStep++;
         }
 
-        return $realPercentage;
+        return $currentStep;
     }
     /**
-     * @param $count
-     * @param $total
+     * @param int $count
+     * @param int $total
      * @return int
      */
-    public function calculatePercentageAverage($count, $total): int
+    public function calculatePercentageAverage(int $count, int $total): int
     {
+        if ($total === 0) {
+            throw new \BadFunctionCallException();
+        }
+
         return round(($count / $total) * 100);
     }
 }

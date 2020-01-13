@@ -32,17 +32,20 @@ class ChartService
     {
         $groupedData = $this->chartRepository->getGroupedData();
 
-        $defaultData = array_fill_keys( array_keys(Percentage::STEPS), 0);
         $series = [];
         foreach ($groupedData as $week => $data) {
             if (!array_key_exists($week, $series)) {
                 $series[$week]['name'] = "$week. week";
-                $series[$week]['data'] = $defaultData;
             }
-            $total = $data['count'];
-            unset($data['count']);
-            foreach ($data as $percentage => $count) {
-                $series[$week]['data'][$percentage] = $this->percentage->calculatePercentageAverage($count, $total);
+
+            $total = $data[0];
+            $series[$week]['data'] = $data;
+            foreach ($data as $step => $count) {
+                if ($count <= 0) {
+                    break;
+                }
+
+                $series[$week]['data'][$step] = $this->percentage->calculatePercentageAverage($count, $total);
             }
             $series[$week]['data'] = array_values($series[$week]['data']);
         }

@@ -37,15 +37,15 @@ class ChartRepositoryTest extends TestCase
             ->willReturn($data);
 
         $this->percentage->expects($this->exactly(2))
-            ->method('findPercentageInSteps')
+            ->method('findStepInFlow')
             ->withConsecutive([40], [30])
-            ->willReturnOnConsecutiveCalls(40, 20);
+            ->willReturnOnConsecutiveCalls(2, 1);
 
         $result = $this->chartRepository->getGroupedData();
 
         $expectResult = [
-            29 => ['count' => 1, '40' => 1],
-            30 => ['count' => 1, '20' => 1]
+            29 => [0 => 1, 1 => 1, 2 => 1, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0],
+            30 => [0 => 1, 1 => 1, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0]
         ];
         $this->assertEquals($expectResult, $result);
     }
