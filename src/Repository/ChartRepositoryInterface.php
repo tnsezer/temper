@@ -4,5 +4,5 @@ namespace App\Repository;
 
 interface ChartRepositoryInterface
 {
-    public function getGroupedData(): array;
+    public function all(): array;
 }

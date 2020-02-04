@@ -2,7 +2,7 @@
 
 namespace App\Util;
 
-class JSONFormatter implements Formatter {
+class JSONFormatter implements FormatterInterface {
 
     /**
      * @param array $data

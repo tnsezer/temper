@@ -2,7 +2,7 @@
 
 namespace App\Util;
 
-interface Formatter
+interface FormatterInterface
 {
     public static function format(array $data): string;
 }

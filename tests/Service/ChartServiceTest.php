@@ -4,6 +4,7 @@ namespace Test\Service;
 
 use App\Repository\ChartRepository;
 use App\Service\ChartService;
+use App\Util\CsvReader;
 use App\Util\Percentage;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -16,42 +17,38 @@ class ChartServiceTest extends TestCase
     /** @var MockObject|ChartRepository $chartRepository */
     private $chartRepository;
 
-    /** @var MockObject|Percentage $percentage */
-    private $percentage;
-
-    public function setUp()
+    public function setUp(): void
     {
         $this->chartRepository = $this->createMock(ChartRepository::class);
-        $this->percentage = $this->createMock(Percentage::class);
-        $this->chartService = new ChartService($this->chartRepository, $this->percentage);
+        $this->chartService = new ChartService($this->chartRepository);
     }
 
-    public function testGetChartData()
+    public function testConvert()
     {
-        $groupedData = [
-            29 => [0 => 1, 1 => 1, 2 => 1, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0],
-            30 => [0 => 2, 1 => 2, 2 => 1, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0]
-        ];
+        $this->assertInstanceOf(\DateTime::class, $this->chartService->convert('now'));
+    }
+
+    public function testConvertInvalidArgumentException()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->chartService->convert('TEST');
+    }
+
+    public function testGetSteps()
+    {
+        $this->assertSame(array_values(Percentage::STEPS),  $this->chartService->getSteps());
+    }
+
+    public function testGetWeeklyChartData()
+    {
+        $csvReader = new CsvReader(DATA_DIR . 'export.csv', ';');
         $this->chartRepository->expects($this->once())
-            ->method('getGroupedData')
-            ->willReturn($groupedData);
-        $this->percentage->expects($this->exactly(6))
-            ->method('calculatePercentageAverage')
-            ->withConsecutive(
-                [1,1], [1,1], [1,1],
-                [2,2], [2,2], [1,2]
-            )
-            ->willReturnOnConsecutiveCalls(100, 100, 100, 100, 100, 50);
+            ->method('all')
+            ->willReturn($csvReader->read());
 
-        $result = $this->chartService->getChartData();
+        $result = $this->chartService->getWeeklyChartData();
 
-        $expectResult = [
-            'steps' => array_values(Percentage::STEPS),
-            'series' => [
-                0 => ['name' => '29. week', 'data' => [100,100,100,0,0,0,0,0]],
-                1 => ['name' => '30. week', 'data' => [100,100,50,0,0,0,0,0]],
-            ]
-        ];
-        $this->assertEquals($expectResult, $result);
+        $this->assertArrayHasKey('name', current($result));
+        $this->assertArrayHasKey('data', current($result));
     }
 }

@@ -8,9 +8,9 @@ use App\Service\ChartService;
 use App\Util\Percentage;
 
 $csvModel = new Csv();
+$chartRepository = new ChartRepository($csvModel);
 $percentage = new Percentage();
-$chartRepository = new ChartRepository($csvModel, $percentage);
 $chartService = new ChartService($chartRepository, $percentage);
 $controller = new ApiController();
 
-$controller->getChartData($chartService);
+$controller->getWeeklyChartDataAsJson($chartService);

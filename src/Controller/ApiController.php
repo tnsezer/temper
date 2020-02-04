@@ -8,11 +8,13 @@ use App\Util\JSONOutput;
 
 class ApiController
 {
-    public function getChartData(ChartService $chartService): void
+    public function getWeeklyChartDataAsJson(ChartService $chartService): void
     {
-        $data = $chartService->getChartData();
+        $steps = $chartService->getSteps();
+        $data = $chartService->getWeeklyChartData();
+
         JSONOutput::output(
-            JSONFormatter::format($data)
+            JSONFormatter::format(['steps' => $steps, 'series' =>  $data])
         );
     }
 }

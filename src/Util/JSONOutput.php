@@ -2,7 +2,7 @@
 
 namespace App\Util;
 
-class JSONOutput implements Output
+class JSONOutput implements OutputInterface
 {
     /**
      * @param string $data

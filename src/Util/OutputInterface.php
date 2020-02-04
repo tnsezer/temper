@@ -2,7 +2,7 @@
 
 namespace App\Util;
 
-interface Output
+interface OutputInterface
 {
     public static function output(string $data): void;
 }

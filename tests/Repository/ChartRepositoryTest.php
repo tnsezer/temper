@@ -4,8 +4,7 @@ namespace Test\Repository;
 
 use App\Model\Csv;
 use App\Repository\ChartRepository;
-use App\Util\Percentage;
-use PHPUnit\Framework\MockObject\MockObject;
+use App\Util\CsvReader;
 use PHPUnit\Framework\TestCase;
 
 class ChartRepositoryTest extends TestCase
@@ -16,37 +15,21 @@ class ChartRepositoryTest extends TestCase
     /** @var MockObject\MockObject|Csv $dataModel */
     private $dataModel;
 
-    /** @var MockObject|Percentage $percentage */
-    private $percentage;
-
     public function setUp()
     {
         $this->dataModel = $this->createMock(Csv::class);
-        $this->percentage = $this->createMock(Percentage::class);
-        $this->chartRepository = new ChartRepository($this->dataModel, $this->percentage);
+        $this->chartRepository = new ChartRepository($this->dataModel);
     }
 
-    public function testGetGroupedData()
+    public function testAll()
     {
-        $data = [
-            ['user_id' => '3121', 'created_at' => '2016-07-19', 'onboarding_perentage' => '40'],
-            ['user_id' => '3122', 'created_at' => '2016-07-26', 'onboarding_perentage' => '30']
-        ];
+        $csvReader = new CsvReader(DATA_DIR . 'export.csv', ';');
+        $dataSource = $csvReader->read();
         $this->dataModel->expects($this->once())
             ->method('getContextData')
-            ->willReturn($data);
+            ->willReturn($dataSource);
+        $result = $this->chartRepository->all();
 
-        $this->percentage->expects($this->exactly(2))
-            ->method('findStepInFlow')
-            ->withConsecutive([40], [30])
-            ->willReturnOnConsecutiveCalls(2, 1);
-
-        $result = $this->chartRepository->getGroupedData();
-
-        $expectResult = [
-            29 => [0 => 1, 1 => 1, 2 => 1, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0],
-            30 => [0 => 1, 1 => 1, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0]
-        ];
-        $this->assertEquals($expectResult, $result);
+        $this->assertEquals($dataSource, $result);
     }
 }

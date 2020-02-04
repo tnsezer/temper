@@ -19,7 +19,7 @@ class Percentage
      * @param int $userPercentage
      * @return int
      */
-    public function findStepInFlow(int $userPercentage): int
+    public static function findStepInFlow(int $userPercentage): int
     {
         $currentStep = -1;
         foreach (self::STEPS as $percentage => $step) {
@@ -36,7 +36,7 @@ class Percentage
      * @param int $total
      * @return int
      */
-    public function calculatePercentageAverage(int $count, int $total): int
+    public static function calculatePercentageAverage(int $count, int $total): int
     {
         if ($total === 0) {
             throw new \BadFunctionCallException();
